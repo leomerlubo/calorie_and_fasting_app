@@ -1,0 +1,7 @@
+{
+  "name": "The #SelfLove App!",
+  "description": "A comprehensive wellness application for calorie tracking and intermittent fasting management. Features BMR calculation, daily goal tracking, activity logging, and intuitive fasting stages monitoring.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
