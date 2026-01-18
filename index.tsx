@@ -157,7 +157,7 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; chi
   );
 };
 
-// --- TABS ---
+// --- VIEWS ---
 const CaloriesTab: React.FC<{ logs: LogEntry[], dailyLimit: number, onAddLog: any, onDeleteLog: any }> = ({ logs, dailyLimit, onAddLog, onDeleteLog }) => {
   const [isFoodModalOpen, setFoodModalOpen] = useState(false);
   const [isActivityModalOpen, setActivityModalOpen] = useState(false);
@@ -185,7 +185,7 @@ const CaloriesTab: React.FC<{ logs: LogEntry[], dailyLimit: number, onAddLog: an
             <p className="text-lg font-black text-slate-900">{consumed}</p>
           </div>
           <div className="flex flex-col items-center border-x border-slate-100 px-6">
-            <p className="text-indigo-500 text-[9px] font-black uppercase tracking-widest mb-1">Goal Limit</p>
+            <p className="text-indigo-600 text-[9px] font-black uppercase tracking-widest mb-1">Goal Limit</p>
             <p className="text-xl font-black text-slate-900 tracking-tighter">{dailyLimit}</p>
           </div>
           <div className="text-center flex-1">
@@ -283,7 +283,7 @@ const FastingTab: React.FC<{ fastingState: FastingState, fastingLogs: FastingLog
       <div className="flex flex-col items-center">
         <CircularProgress percentage={fastingState.isActive ? Math.min(100, (elapsedHours/16)*100) : 0} label={fastingState.isActive ? formatTime(elapsedMs) : "00:00:00"} subLabel={fastingState.isActive ? getFastingStageName(elapsedHours) : "Inactive"} size={240} />
         <button onClick={() => fastingState.isActive ? setEndModalOpen(true) : setStartModalOpen(true)} className={`mt-10 w-full py-6 rounded-[2rem] font-black uppercase text-[10px] tracking-[0.3em] transition-all shadow-2xl active:scale-95 ${fastingState.isActive ? 'bg-slate-900 text-white' : 'bg-indigo-600 text-white'}`}>
-          {fastingState.isActive ? 'Stop Fast' : 'Start Fast'}
+          {fastingState.isActive ? 'Stop Fasting' : 'Start Fasting'}
         </button>
       </div>
 
@@ -293,7 +293,7 @@ const FastingTab: React.FC<{ fastingState: FastingState, fastingLogs: FastingLog
           {FASTING_STAGES.map((stage) => {
             const isActive = elapsedHours >= stage.hours;
             return (
-              <div key={stage.name} className={`flex items-center gap-6 p-5 rounded-3xl border transition-all ${isActive ? 'border-indigo-100 bg-indigo-50/20' : 'border-slate-50 opacity-40'}`}>
+              <div key={stage.name} className={`flex items-center gap-6 p-5 rounded-3xl border transition-all ${isActive ? 'border-indigo-100 bg-indigo-50/20 shadow-sm' : 'border-slate-50 opacity-40'}`}>
                 <div className="flex-1">
                   <p className={`text-[11px] font-black uppercase tracking-wider ${isActive ? 'text-indigo-600' : 'text-slate-400'}`}>{stage.name}</p>
                   <p className="text-[10px] font-bold text-slate-400 uppercase">{stage.desc}</p>
@@ -306,7 +306,7 @@ const FastingTab: React.FC<{ fastingState: FastingState, fastingLogs: FastingLog
       </div>
 
       <div className="space-y-4 pb-24">
-        <h3 className="text-slate-900 text-[10px] font-black uppercase tracking-[0.3em]">History</h3>
+        <h3 className="text-slate-900 text-[10px] font-black uppercase tracking-[0.3em]">Recent Sessions</h3>
         {fastingLogs.length === 0 ? (
           <div className="py-10 text-center text-slate-300 font-bold uppercase text-[9px] tracking-widest">No history yet</div>
         ) : (
@@ -317,22 +317,22 @@ const FastingTab: React.FC<{ fastingState: FastingState, fastingLogs: FastingLog
                   <p className="text-slate-900 font-bold text-sm">{formatTime(log.duration)}</p>
                   <p className="text-slate-400 text-[9px] font-bold uppercase">{new Date(log.startTime).toLocaleDateString()}</p>
                 </div>
-                <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest">Success</p>
+                <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest">Logged</p>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      <Modal isOpen={isStartModalOpen} onClose={() => setStartModalOpen(false)} title="Log Fast Start">
+      <Modal isOpen={isStartModalOpen} onClose={() => setStartModalOpen(false)} title="Fast Start Time">
         <div className="space-y-6 text-center">
           <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Confirm your start time:</p>
           <input type="datetime-local" className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-bold outline-none" value={customStartTime} onChange={(e) => setCustomStartTime(e.target.value)} />
-          <button onClick={() => { onStartFast(customStartTime ? new Date(customStartTime).getTime() : Date.now()); setStartModalOpen(false); }} className="w-full bg-slate-900 text-white py-5 rounded-xl font-black uppercase text-[10px] tracking-widest">Confirm</button>
+          <button onClick={() => { onStartFast(customStartTime ? new Date(customStartTime).getTime() : Date.now()); setStartModalOpen(false); }} className="w-full bg-slate-900 text-white py-5 rounded-xl font-black uppercase text-[10px] tracking-widest">Start Now</button>
         </div>
       </Modal>
 
-      <Modal isOpen={isEndModalOpen} onClose={() => setEndModalOpen(false)} title="End Session?">
+      <Modal isOpen={isEndModalOpen} onClose={() => setEndModalOpen(false)} title="Finish Session?">
         <div className="flex gap-4">
           <button onClick={() => setEndModalOpen(false)} className="flex-1 py-4 bg-slate-50 text-slate-400 rounded-xl font-black uppercase text-[10px] tracking-widest">Cancel</button>
           <button onClick={() => { onEndFast(); setEndModalOpen(false); }} className="flex-1 py-4 bg-indigo-600 text-white rounded-xl font-black uppercase text-[10px] tracking-widest">Log Fast</button>
@@ -389,7 +389,7 @@ const SettingsTab: React.FC<{ profile: UserProfile, onSaveProfile: any }> = ({ p
         </div>
 
         <div className="space-y-1">
-          <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 px-1">Daily Activity Level</label>
+          <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 px-1">Activity Level</label>
           <select className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-bold outline-none" value={formData.activityLevel} onChange={e => setFormData({...formData, activityLevel: e.target.value as ActivityLevel})}>
             <option value="sedentary">Sedentary</option>
             <option value="lightly_active">Lightly Active</option>
@@ -400,7 +400,7 @@ const SettingsTab: React.FC<{ profile: UserProfile, onSaveProfile: any }> = ({ p
         </div>
 
         <div className="space-y-1">
-          <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 px-1">Target Deficit (kcal)</label>
+          <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 px-1">Deficit Goal (kcal)</label>
           <input type="number" step="50" className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-bold outline-none" value={formData.deficitGoal} onChange={e => setFormData({...formData, deficitGoal: Number(e.target.value)})} />
         </div>
 
@@ -414,7 +414,7 @@ const SettingsTab: React.FC<{ profile: UserProfile, onSaveProfile: any }> = ({ p
 
       <div className="pt-4 border-t border-slate-100">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Custom Limit</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Custom kcal Goal</span>
           <button onClick={() => setIsManual(!isManual)} className={`text-[9px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border transition-all ${isManual ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-50 text-slate-400 border-slate-200'}`}>
             {isManual ? 'Manual' : 'Smart Goal'}
           </button>
@@ -422,14 +422,15 @@ const SettingsTab: React.FC<{ profile: UserProfile, onSaveProfile: any }> = ({ p
         {isManual ? (
           <input type="number" className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-bold outline-none" value={formData.manualLimit || 2000} onChange={e => setFormData({...formData, manualLimit: Number(e.target.value)})} />
         ) : (
-          <div className="bg-slate-900 p-8 rounded-[2rem] text-white shadow-2xl">
+          <div className="bg-slate-900 p-8 rounded-[2rem] text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
             <p className="text-indigo-400 text-[9px] font-black uppercase tracking-[0.3em] mb-2">Calculated Smart Goal</p>
             <p className="text-5xl font-black italic tracking-tighter">{calculatedGoal}<span className="text-xs font-normal not-italic opacity-40 ml-2">kcal</span></p>
           </div>
         )}
       </div>
 
-      <button onClick={handleSave} className="w-full bg-slate-900 text-white py-6 rounded-[2rem] font-black uppercase text-[10px] tracking-widest shadow-xl active:scale-95 transition-all">Save Changes</button>
+      <button onClick={handleSave} className="w-full bg-slate-900 text-white py-6 rounded-[2rem] font-black uppercase text-[10px] tracking-widest shadow-xl active:scale-95 transition-all">Save All Changes</button>
     </div>
   );
 };
@@ -438,21 +439,21 @@ const SettingsTab: React.FC<{ profile: UserProfile, onSaveProfile: any }> = ({ p
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'calories' | 'fasting' | 'settings'>('calories');
   const [profile, setProfile] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem('selflove_user_v9');
+    const saved = localStorage.getItem('selflove_user_v10');
     return saved ? JSON.parse(saved) : { 
       name: 'User', dob: '1995-01-01', height: 175, weight: 70, gender: 'male', 
       manualLimit: null, timezone: 'GMT+0', activityLevel: 'moderately_active', deficitGoal: 500 
     };
   });
 
-  const [logs, setLogs] = useState<LogEntry[]>(() => JSON.parse(localStorage.getItem('selflove_logs_v9') || '[]'));
-  const [fastingLogs, setFastingLogs] = useState<FastingLog[]>(() => JSON.parse(localStorage.getItem('selflove_fast_logs_v9') || '[]'));
-  const [fastingState, setFastingState] = useState<FastingState>(() => JSON.parse(localStorage.getItem('selflove_fast_state_v9') || 'null') || { isActive: false, startTime: null });
+  const [logs, setLogs] = useState<LogEntry[]>(() => JSON.parse(localStorage.getItem('selflove_logs_v10') || '[]'));
+  const [fastingLogs, setFastingLogs] = useState<FastingLog[]>(() => JSON.parse(localStorage.getItem('selflove_fast_logs_v10') || '[]'));
+  const [fastingState, setFastingState] = useState<FastingState>(() => JSON.parse(localStorage.getItem('selflove_fast_state_v10') || 'null') || { isActive: false, startTime: null });
 
-  useEffect(() => localStorage.setItem('selflove_user_v9', JSON.stringify(profile)), [profile]);
-  useEffect(() => localStorage.setItem('selflove_logs_v9', JSON.stringify(logs)), [logs]);
-  useEffect(() => localStorage.setItem('selflove_fast_logs_v9', JSON.stringify(fastingLogs)), [fastingLogs]);
-  useEffect(() => localStorage.setItem('selflove_fast_state_v9', JSON.stringify(fastingState)), [fastingState]);
+  useEffect(() => localStorage.setItem('selflove_user_v10', JSON.stringify(profile)), [profile]);
+  useEffect(() => localStorage.setItem('selflove_logs_v10', JSON.stringify(logs)), [logs]);
+  useEffect(() => localStorage.setItem('selflove_fast_logs_v10', JSON.stringify(fastingLogs)), [fastingLogs]);
+  useEffect(() => localStorage.setItem('selflove_fast_state_v10', JSON.stringify(fastingState)), [fastingState]);
 
   const dailyLimit = profile.manualLimit || calculateDailyTarget(profile);
 
@@ -497,7 +498,7 @@ const App: React.FC = () => {
         </button>
       </nav>
 
-      <main className="flex-1 overflow-y-auto mt-4 scroll-smooth">
+      <main className="flex-1 overflow-y-auto mt-4 scroll-smooth custom-scrollbar">
         {activeTab === 'calories' && <CaloriesTab logs={logs} dailyLimit={dailyLimit} onAddLog={(e: any) => setLogs([{...e, id: Math.random().toString(), timestamp: Date.now()}, ...logs])} onDeleteLog={(id: string) => setLogs(logs.filter(l => l.id !== id))} />}
         {activeTab === 'fasting' && <FastingTab fastingState={fastingState} fastingLogs={fastingLogs} onStartFast={(t: number) => setFastingState({isActive: true, startTime: t})} onEndFast={handleEndFast} />}
         {activeTab === 'settings' && <SettingsTab profile={profile} onSaveProfile={handleSaveProfile} />}
