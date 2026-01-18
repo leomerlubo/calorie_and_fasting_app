@@ -24,34 +24,39 @@ export const calculateBMR = (profile: UserProfile): number => {
 
 export const getFastingStage = (hours: number): { name: FastingStage; description: string; color: string } => {
   if (hours < 4) return { 
-    name: FastingStage.BLOOD_SUGAR_DROPPING, 
-    description: "Insulin levels start to drop.",
-    color: "text-blue-500"
+    name: FastingStage.FED_STATE, 
+    description: "Insulin is high, body is processing food.",
+    color: "text-blue-400"
   };
   if (hours < 12) return { 
-    name: FastingStage.BLOOD_SUGAR_NORMAL, 
-    description: "Blood sugar levels are stabilizing.",
+    name: FastingStage.EARLY_FASTING, 
+    description: "Blood sugar begins to normalize.",
     color: "text-cyan-500"
   };
-  if (hours < 18) return { 
-    name: FastingStage.FAT_BURNING, 
-    description: "Body starts switching to fat as fuel.",
+  if (hours < 24) return { 
+    name: FastingStage.GLYCOGEN_DEPLETION, 
+    description: "Liver glycogen stores are being used up.",
     color: "text-emerald-500"
   };
-  if (hours < 24) return { 
-    name: FastingStage.KETOSIS, 
-    description: "The liver produces ketones for energy.",
+  if (hours < 48) return { 
+    name: FastingStage.KETOSIS_INITIATION, 
+    description: "Body starts burning fat for fuel.",
     color: "text-amber-500"
   };
-  if (hours < 48) return { 
-    name: FastingStage.AUTOPHAGY, 
-    description: "Cells begin recycling old parts.",
-    color: "text-indigo-500"
+  if (hours < 72) return { 
+    name: FastingStage.DEEP_KETOSIS, 
+    description: "Fat burning is maximized; hunger often fades.",
+    color: "text-orange-600"
+  };
+  if (hours < 96) return { 
+    name: FastingStage.AUTOPHAGY_ACTIVATION, 
+    description: "Cells recycle damaged components.",
+    color: "text-indigo-600"
   };
   return { 
-    name: FastingStage.DEEP_AUTOPHAGY, 
-    description: "Maximum cell regeneration and healing.",
-    color: "text-purple-600"
+    name: FastingStage.PROTEIN_CONSERVATION, 
+    description: "Metabolism shifts to protect muscle mass.",
+    color: "text-purple-700"
   };
 };
 

@@ -35,10 +35,11 @@ export interface FastingState {
 }
 
 export enum FastingStage {
-  BLOOD_SUGAR_DROPPING = "Blood sugar is dropping",
-  BLOOD_SUGAR_NORMAL = "Blood sugar normalizing",
-  FAT_BURNING = "Fat burning mode",
-  KETOSIS = "Ketosis state",
-  AUTOPHAGY = "Autophagy stage",
-  DEEP_AUTOPHAGY = "Deep autophagy",
+  FED_STATE = "Fed State",
+  EARLY_FASTING = "Early Fasting",
+  GLYCOGEN_DEPLETION = "Glycogen Depletion",
+  KETOSIS_INITIATION = "Ketosis Initiation",
+  DEEP_KETOSIS = "Deep Ketosis",
+  AUTOPHAGY_ACTIVATION = "Autophagy Activation",
+  PROTEIN_CONSERVATION = "Protein Conservation Phase",
 }
