@@ -10,7 +10,7 @@
     <title>#SelfLove - Wellness & Fasting</title>
     <link rel="manifest" href="./manifest.json" />
     
-    <!-- Scripts for Browser-side Transpilation (Making .tsx work on GitHub Pages) -->
+    <!-- Scripts for Browser-side Transpilation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -23,6 +23,7 @@
         font-family: 'Inter', sans-serif;
         background-color: #f8fafc;
         -webkit-tap-highlight-color: transparent;
+        overscroll-behavior-y: contain;
       }
       .custom-scrollbar::-webkit-scrollbar {
         width: 4px;
@@ -33,9 +34,6 @@
       .custom-scrollbar::-webkit-scrollbar-thumb {
         background: #cbd5e1;
         border-radius: 10px;
-      }
-      body {
-        overscroll-behavior-y: contain;
       }
     </style>
 
@@ -54,18 +52,11 @@
   </head>
   <body>
     <div id="root"></div>
-    
-    <!-- Using type="text/babel" and data-presets for on-the-fly compilation -->
     <script type="text/babel" data-presets="react,typescript" src="./index.tsx"></script>
-    
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').then(registration => {
-            console.log('SW registered');
-          }).catch(err => {
-            console.log('SW registration failed: ', err);
-          });
+          navigator.serviceWorker.register('./sw.js').catch(err => console.error('SW registration failed:', err));
         });
       }
     </script>
