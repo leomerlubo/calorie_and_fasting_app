@@ -18,3 +18,20 @@ View your app in AI Studio: https://ai.studio/apps/drive/1DmQ1GyZXjiWIK6kC0xF6Ty
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Android Studio (Capacitor)
+
+You can wrap this web app for Android Studio using Capacitor.
+
+1. Install Capacitor dependencies:
+   `npm install`
+2. Build the web app:
+   `npm run build`
+3. Add the Android platform (first time only):
+   `npx cap add android`
+4. Sync web assets into the native project:
+   `npm run cap:sync`
+5. Open the Android project in Android Studio:
+   `npm run cap:open:android`
+
+After the first setup, you can repeat steps 2, 4, and 5 whenever the web app changes.
