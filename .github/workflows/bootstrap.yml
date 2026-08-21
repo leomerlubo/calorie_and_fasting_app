@@ -25,13 +25,13 @@ jobs:
           mkdir -p /tmp/wellness-source
           tar -xzf /tmp/wellness-source.tar.gz -C /tmp/wellness-source
 
-          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -a /tmp/wellness-source/. .
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github -exec rm -rf {} +
+          find /tmp/wellness-source -mindepth 1 -maxdepth 1 ! -name .github -exec cp -a {} . \;
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- .env.example .gitignore README.md capacitor.config.json index.html package.json vite.config.js src supabase .github/workflows/build.yml
-          git add -u -- wellness-source.tar.gz wellness.part.00 wellness.part.01 wellness.part.02 wellness.part.03 .github/workflows/bootstrap.yml || true
+          git add -- .env.example .gitignore README.md capacitor.config.json index.html package.json vite.config.js src supabase
+          git add -u -- wellness-source.tar.gz wellness.part.00 wellness.part.01 wellness.part.02 wellness.part.03 || true
 
           if ! git diff --cached --quiet; then
             git commit -m "Rebuild My Wellness app"
