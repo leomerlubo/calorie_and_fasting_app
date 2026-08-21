@@ -16,20 +16,22 @@ jobs:
         with:
           ref: rebuild/base44-recreation
 
-      - name: Expand rebuilt source
+      - name: Reassemble and expand rebuilt source
         run: |
-          mkdir -p /tmp/wellness-source
-          tar -xzf wellness-source.tar.gz -C /tmp/wellness-source
+          cat wellness.part.00 wellness.part.01 wellness.part.02 wellness.part.03 > /tmp/wellness.b64
+          base64 -d /tmp/wellness.b64 > /tmp/wellness-source.tar.gz
+          echo "bff5bc33a62443322af7d957498f920412e30a1e2b5325b15ff7c600b7ed8907  /tmp/wellness-source.tar.gz" | sha256sum -c -
 
-          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name wellness-source.tar.gz ! -name .github -exec rm -rf {} +
-          rm -rf .github
+          mkdir -p /tmp/wellness-source
+          tar -xzf /tmp/wellness-source.tar.gz -C /tmp/wellness-source
+
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           cp -a /tmp/wellness-source/. .
-          rm -f wellness-source.tar.gz
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- .env.example .gitignore README.md capacitor.config.json index.html package.json vite.config.js src supabase .github/workflows/build.yml
-          git add -u -- wellness-source.tar.gz .github/workflows/bootstrap.yml || true
+          git add -u -- wellness-source.tar.gz wellness.part.00 wellness.part.01 wellness.part.02 wellness.part.03 .github/workflows/bootstrap.yml || true
 
           if ! git diff --cached --quiet; then
             git commit -m "Rebuild My Wellness app"
