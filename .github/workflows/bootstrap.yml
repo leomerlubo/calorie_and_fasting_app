@@ -1,12 +1,8 @@
 name: Bootstrap Wellness Source
 
 on:
-  push:
-    branches:
-      - rebuild/base44-recreation
-    paths:
-      - wellness-source.tar.gz
-      - .github/workflows/bootstrap.yml
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
