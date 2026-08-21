@@ -1,0 +1,8 @@
+{
+  "appId": "com.leomerlubo.mywellness",
+  "appName": "My Wellness",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
