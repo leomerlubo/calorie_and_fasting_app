@@ -1,0 +1,38 @@
+name: Apply Wellness Test Update
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'rebuild/base44-recreation' || github.ref_name == 'rebuild/base44-recreation'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rebuild/base44-recreation
+
+      - name: Rebuild verified source files
+        run: |
+          cat .transfer/app.00 .transfer/app.01 .transfer/app.02 .transfer/app.03 .transfer/app.04 | base64 -d > src/App.jsx
+          cat .transfer/styles.00 .transfer/styles.01 .transfer/styles.02 | base64 -d > src/styles.css
+          cat .transfer/store.00 | base64 -d > src/lib/store.js
+          cat .transfer/index.00 | base64 -d > index.html
+
+          echo "afe55202c96191a07fbae135f3fd904faa8bb610139dbd3991ede80c0973bf65  src/App.jsx" | sha256sum -c -
+          echo "785250d1bf2f4897aaa63d4d096c1fc704478e7c11a6fe52703ffa7d32af047d  src/styles.css" | sha256sum -c -
+          echo "95c8d995ef516a3c5719c2c30e17f6950636efd3827fb1d50f0135271187a170  src/lib/store.js" | sha256sum -c -
+          echo "a7cbc167165ae3b7969f7e81550908b9c9e8584ef526c8f262234f11c57049d8  index.html" | sha256sum -c -
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- src/App.jsx src/styles.css src/lib/store.js index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Improve wellness test experience"
+            git push origin HEAD:rebuild/base44-recreation
+          fi
