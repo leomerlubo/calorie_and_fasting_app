@@ -1,20 +1,45 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# My Wellness
 
-# Run and deploy your AI Studio app
+A mobile-first wellness tracker rebuilt from scratch for calories, activity, fasting and a simple timer.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1DmQ1GyZXjiWIK6kC0xF6Ty7IutEiuIz2
+- Email/password and Google sign-in via Supabase Auth
+- Profile, BMR and TDEE calculation
+- Suggested or custom calorie goal
+- Daily food and activity logging
+- Saved food menus
+- Searchable activity catalog with estimated calorie burn
+- Historical date navigation and edit/delete logs
+- Fasting sessions, milestones, longest fast and total fasting time
+- Timezone, hashtag and color customization
+- Lightweight timer
+- Capacitor Android packaging
 
-## Run Locally
+## Local setup
 
-**Prerequisites:**  Node.js
+1. Copy `.env.example` to `.env`.
+2. Add a Supabase project URL and publishable key.
+3. Run the SQL in `supabase/schema.sql` in a fresh Supabase project.
+4. Enable Email/Password and Google in Supabase Auth.
+5. `npm install`
+6. `npm run dev`
 
+Without Supabase variables, the project still builds and uses a local preview store for UI development. Production should use Supabase.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Android
+
+After dependencies are installed:
+
+```bash
+npm run build
+npx cap add android
+npx cap sync android
+npx cap open android
+```
+
+Use a release keystore for production distribution. Do not commit keystores or secret keys.
+
+## Security
+
+The browser/mobile client uses only the Supabase publishable key. The schema enables RLS on every user table and restricts rows to `auth.uid() = user_id`.
