@@ -1,10 +1,10 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import TestApp from './TestApp.jsx';
-import './test.css';
+import TestAppV3 from './TestAppV3.jsx';
+import './test-v3.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <TestApp />
+    <TestAppV3 />
   </React.StrictMode>,
 );
