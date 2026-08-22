@@ -1,4 +1,4 @@
-import { supabase } from './lib/supabase.js';
+import { getSupabase } from './supabaseRuntime.js';
 
 const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -14,6 +14,7 @@ export function normalizeLocalState(state){
 }
 
 export async function loadCloudState(userId){
+  const supabase=await getSupabase();
   const [profile,foods,activities,menus,fasting]=await Promise.all([
     supabase.from('profiles').select('*').eq('user_id',userId).maybeSingle(),
     supabase.from('food_logs').select('*').eq('user_id',userId).order('created_at',{ascending:false}),
@@ -37,7 +38,7 @@ export async function loadCloudState(userId){
   };
 }
 
-async function reconcile(table,userId,rows){
+async function reconcile(supabase,table,userId,rows){
   const current=await supabase.from(table).select('id').eq('user_id',userId);
   if(current.error)throw current.error;
   if(rows.length){
@@ -53,6 +54,7 @@ async function reconcile(table,userId,rows){
 }
 
 export async function syncCloudState(userId,input){
+  const supabase=await getSupabase();
   const state=normalizeLocalState(input||{});
   const p=state.profile||{};
   const profile=await supabase.from('profiles').upsert({
@@ -74,10 +76,10 @@ export async function syncCloudState(userId,input){
   if(profile.error)throw profile.error;
 
   await Promise.all([
-    reconcile('food_logs',userId,(state.foods||[]).map(x=>({id:x.id,user_id:userId,log_date:x.date,name:x.name,calories:Number(x.cal)||1,created_at:x.created||new Date().toISOString()}))),
-    reconcile('activity_logs',userId,(state.activities||[]).map(x=>({id:x.id,user_id:userId,log_date:x.date,name:x.name,duration_minutes:Number(x.minutes)||1,calories_burned:Number(x.cal)||1,created_at:x.created||new Date().toISOString()}))),
-    reconcile('food_presets',userId,(state.menus||[]).map(x=>({id:x.id,user_id:userId,name:x.name,calories:Number(x.cal)||1,created_at:x.created||new Date().toISOString()}))),
-    reconcile('fasting_sessions',userId,(state.fasting||[]).map(x=>({id:x.id,user_id:userId,started_at:x.start,ended_at:x.end||null,created_at:x.created||x.start||new Date().toISOString()}))),
+    reconcile(supabase,'food_logs',userId,(state.foods||[]).map(x=>({id:x.id,user_id:userId,log_date:x.date,name:x.name,calories:Number(x.cal)||1,created_at:x.created||new Date().toISOString()}))),
+    reconcile(supabase,'activity_logs',userId,(state.activities||[]).map(x=>({id:x.id,user_id:userId,log_date:x.date,name:x.name,duration_minutes:Number(x.minutes)||1,calories_burned:Number(x.cal)||1,created_at:x.created||new Date().toISOString()}))),
+    reconcile(supabase,'food_presets',userId,(state.menus||[]).map(x=>({id:x.id,user_id:userId,name:x.name,calories:Number(x.cal)||1,created_at:x.created||new Date().toISOString()}))),
+    reconcile(supabase,'fasting_sessions',userId,(state.fasting||[]).map(x=>({id:x.id,user_id:userId,started_at:x.start,ended_at:x.end||null,created_at:x.created||x.start||new Date().toISOString()}))),
   ]);
   return state;
 }
