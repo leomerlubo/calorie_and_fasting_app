@@ -133,6 +133,13 @@ export async function endFast(userId, id, endedAt) {
   const { error } = await supabase.from('fasting_sessions').update({ ended_at: endedAt }).eq('id', id); if (error) throw error;
 }
 
+export async function deleteFast(userId, id) {
+  if (!isSupabaseConfigured || !userId) {
+    const state = loadLocal(); state.fasting = state.fasting.filter(x => x.id !== id); saveLocal(state); return;
+  }
+  const { error } = await supabase.from('fasting_sessions').delete().eq('id', id); if (error) throw error;
+}
+
 export async function deleteMenu(userId, id) {
   if (!isSupabaseConfigured || !userId) {
     const state = loadLocal(); state.menus = state.menus.filter(x => x.id !== id); saveLocal(state); return;
