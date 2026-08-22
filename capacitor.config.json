@@ -1,6 +1,6 @@
 {
   "appId": "com.leomerlubo.mywellness",
-  "appName": "My Wellness",
+  "appName": "SelfLove",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"
